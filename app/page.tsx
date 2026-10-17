@@ -92,12 +92,12 @@ function BuildCard({ b }: { b: Build }) {
         {(b.site || b.repo) && (
           <span className="pills">
             {b.site && (
-              <a className="pill pill-solid" href={b.site} aria-label={`Visit the ${b.title} website`}>
+              <a className="pill pill-solid" href={b.site} target="_blank" rel="noopener noreferrer" aria-label={`Visit the ${b.title} website (opens in a new tab)`}>
                 Visit site
               </a>
             )}
             {b.repo && (
-              <a className="pill" href={b.repo} aria-label={`${b.title} on GitHub`}>
+              <a className="pill" href={b.repo} target="_blank" rel="noopener noreferrer" aria-label={`${b.title} on GitHub (opens in a new tab)`}>
                 GitHub
               </a>
             )}
@@ -220,10 +220,10 @@ export default function HomePage() {
             </p>
             <ul className="links">
               <li>
-                <a href="https://linkedin.com/in/tom-j-allen">LinkedIn</a>
+                <a href="https://linkedin.com/in/tom-j-allen" target="_blank" rel="noopener noreferrer">LinkedIn</a>
               </li>
               <li>
-                <a href="https://github.com/TomJAllen">GitHub</a>
+                <a href="https://github.com/TomJAllen" target="_blank" rel="noopener noreferrer">GitHub</a>
               </li>
             </ul>
           </div>
