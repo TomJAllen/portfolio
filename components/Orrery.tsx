@@ -6,6 +6,8 @@ const C = 320;
 type Orbit = {
   r: number;
   label: string;
+  href: string;
+  section: string;
   color: string;
   size: number;
   hollow?: boolean;
@@ -15,11 +17,11 @@ type Orbit = {
 };
 
 const ORBITS: Orbit[] = [
-  { r: 104, label: "product", color: "var(--ultramarine)", size: 9, angle: 210, period: 48 },
-  { r: 152, label: "ai platforms", color: "var(--teal)", size: 12, angle: 320, period: 72 },
-  { r: 200, label: "build", color: "var(--ochre)", size: 10, angle: 40, period: 100, dashed: true },
-  { r: 248, label: "play", color: "var(--text)", size: 8, hollow: true, angle: 150, period: 136 },
-  { r: 290, label: "endurance", color: "var(--red)", size: 11, angle: 255, period: 180, dashed: true },
+  { r: 104, label: "product", href: "#work", section: "Work", color: "var(--ultramarine)", size: 9, angle: 210, period: 48 },
+  { r: 152, label: "ai platforms", href: "#drives", section: "What drives me", color: "var(--teal)", size: 12, angle: 320, period: 72 },
+  { r: 200, label: "build", href: "#building", section: "Building", color: "var(--ochre)", size: 10, angle: 40, period: 100, dashed: true },
+  { r: 248, label: "play", href: "#games", section: "Games", color: "var(--text)", size: 8, hollow: true, angle: 150, period: 136 },
+  { r: 290, label: "endurance", href: "#off", section: "Off the clock", color: "var(--red)", size: 11, angle: 255, period: 180, dashed: true },
 ];
 
 function circlePath(r: number) {
@@ -78,6 +80,7 @@ export default function Orrery() {
         } as CSSProperties;
         return (
           <g key={o.label} className="orbit" style={vars}>
+           <a href={o.href} className="orbit-link" aria-label={`${o.label}: go to ${o.section}`}>
             <circle cx={C} cy={C} r={o.r} className="hit" />
             <circle cx={C} cy={C} r={o.r} className={o.dashed ? "ring dashed" : "ring"} />
             <text className="ring-label">
@@ -98,6 +101,7 @@ export default function Orrery() {
                 />
               </g>
             </g>
+           </a>
           </g>
         );
       })}

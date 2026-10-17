@@ -59,8 +59,14 @@ body {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+[id] {
+  scroll-margin-top: 1.5rem;
 }
 
 body {
@@ -308,13 +314,24 @@ main {
   pointer-events: none;
 }
 
-.orrery .orbit:hover .ring {
+.orrery .orbit-link {
+  cursor: pointer;
+  outline: none;
+}
+
+.orrery .orbit:hover .ring,
+.orrery .orbit-link:focus-visible .ring {
   stroke: var(--c);
   stroke-width: 2;
 }
 
-.orrery .orbit:hover .ring-label {
+.orrery .orbit:hover .ring-label,
+.orrery .orbit-link:focus-visible .ring-label {
   fill: var(--c);
+}
+
+.orrery .orbit-link:focus-visible .body {
+  transform: scale(1.5);
 }
 
 .orrery .body {
@@ -558,40 +575,107 @@ main {
   color: var(--muted);
 }
 
-/* Building */
+/* Work intro */
 
-.builds {
-  display: grid;
-  gap: 1.75rem;
+.section-intro {
+  margin-bottom: 2.75rem;
 }
 
-.builds h3 {
+/* Building: four cards, outlined like plates in a technical drawing */
+
+.build-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: none;
+}
+
+.build-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+.build-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.build-icon .stroke {
+  stroke: var(--text);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.build-icon .stroke.thin {
+  stroke-width: 1.4;
+  opacity: 0.6;
+}
+
+.build-card h3 {
   font-size: 1.25rem;
   font-weight: 500;
 }
 
-.builds p {
-  margin-top: 0.2rem;
+.build-card p {
+  margin-top: 0.35rem;
   color: var(--muted);
 }
 
-/* Contact */
+.build-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+}
 
-.email {
-  display: inline-block;
-  font-size: clamp(1.6rem, 4.5vw, 3rem);
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
+.build-status {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.pills {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   color: var(--text);
-  text-decoration-color: var(--red);
-  text-decoration-thickness: 2px;
-  overflow-wrap: anywhere;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.email:hover {
-  text-decoration-thickness: 3px;
+.pill:hover {
+  border-color: var(--text);
 }
+
+.pill-solid {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--ground);
+}
+
+.pill-solid:hover {
+  background: transparent;
+  color: var(--text);
+}
+
+/* Contact */
 
 .links {
   display: flex;
@@ -630,6 +714,12 @@ main {
   }
 
   .pairs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 36rem) {
+  .build-grid {
     grid-template-columns: 1fr;
   }
 }
