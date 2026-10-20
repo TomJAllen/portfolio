@@ -52,11 +52,11 @@ type Build = {
 
 const building: Build[] = [
   {
-    title: "Surf Signals",
-    text: "Learn the surf lifesaving signals, including practising them on camera.",
+    title: "Patrol Ready",
+    text: "Learn and test surf lifesaving patrol skills: hand signals (practised on camera), first-aid acronyms and radio calls.",
     status: "Live",
-    repo: "https://github.com/TomJAllen/Surf-Signals",
-    site: "https://surf-signals.vercel.app",
+    repo: "https://github.com/TomJAllen/patrol-ready",
+    site: "https://www.patrolready.au",
     icon: <SurfFlagIcon />,
   },
   {
