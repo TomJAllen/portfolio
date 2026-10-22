@@ -5,7 +5,7 @@ import type { Metadata, Viewport } from "next";
 
 const SITE_URL = "https://tomjallen.me";
 const DESCRIPTION =
-  "Tom J Allen (Thomas James Allen) is a Sydney-based AI platform and product leader specialising in ontology, knowledge graphs and semantic data models.";
+  "Tom J Allen (Thomas James Allen) is a Sydney-based AI platform and product leader working across ontology, knowledge graphs and semantic data models.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -76,6 +76,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         {children}
+        {/* Cloudflare Web Analytics: cookieless, privacy-friendly visit counts */}
+        <script
+          type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "72a176526f194bbb8097bf932aa261bb"}'
+        />
       </body>
     </html>
   );

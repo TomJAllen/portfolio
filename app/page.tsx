@@ -169,14 +169,13 @@ export default function HomePage() {
               </h3>
               <p className="role-title">Ontology &amp; Standards Manager</p>
               <p>
-                I own the platform model: how the ontology actually operates inside an AI
-                platform, and the standards that keep everything built on it consistent.
+                I look after the platform model: how the ontology works inside an AI platform,
+                and the standards that keep what&rsquo;s built on it consistent.
               </p>
               <p>
-                Before that, as Product Manager, I led discovery and build of Decidr&rsquo;s first
-                four products with global development teams. They laid the foundations for the
-                platform&rsquo;s end state, and its partnership products were delivered on top of
-                them.
+                Before that, as Product Manager, I co-led discovery and build of Decidr&rsquo;s
+                early products with global development teams, laying the foundations the platform
+                has grown from.
               </p>
             </article>
 
