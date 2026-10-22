@@ -16,14 +16,23 @@ export const metadata: Metadata = {
     type: "profile",
     url: SITE_URL,
     siteName: "Tom J Allen",
-    title: "Tom J Allen | Order from chaos, done beautifully",
-    description: DESCRIPTION,
+    title: "Tom J Allen",
+    description: "Sydney-based AI platform and product leader. Order from chaos, done beautifully.",
     locale: "en_AU",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Tom J Allen: Order from chaos, done beautifully. AI platform & ontology, Sydney.",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Tom J Allen",
-    description: DESCRIPTION,
+    description: "Sydney-based AI platform and product leader. Order from chaos, done beautifully.",
+    images: ["/og.png"],
   },
 };
 
