@@ -1,46 +1,18 @@
 # tomjallen.me
 
-Source for [tomjallen.me](https://tomjallen.me), the personal site of Tom J Allen, a Sydney-based AI platform and product leader.
+The code behind my personal site, [tomjallen.me](https://tomjallen.me).
 
-**Order from chaos, done beautifully.**
+I wanted one place that pulls together what I do: my work in AI platforms and product, the things I'm building on the side, and how to get in touch. I'd had a couple of older portfolio sites over the years, and this replaces them with something simpler that I can keep up to date.
 
-## About the site
+It's also a small project in its own right. The orrery on the homepage, with its orbits for the different sides of what I do, was a fun way to make the page feel like mine rather than a template.
 
-A single-page site built around an interactive orrery: five orbits for product, AI platforms, build, play and endurance, circling the TJA mark. Each orbit links to its section of the page. The design language, "Celestial Schematic", pairs orrery and technical-diagram motifs with a Swiss/Bauhaus grid and a six-colour palette.
+## Built with
 
-- Light and dark themes, following the system setting with a manual toggle
-- Orchestrated load animation and live orbits, with reduced-motion respected
-- Accessible: keyboard-navigable orrery, visible focus states, semantic structure
-- SEO and AI-search ready: structured `Person` data, sitemap, robots and social preview card
+- [Next.js](https://nextjs.org), exported as a static site
+- TypeScript and plain CSS
+- Hosted on [Cloudflare](https://www.cloudflare.com), deployed automatically on every push to `main`
 
-## Stack
-
-- [Next.js](https://nextjs.org) (App Router), exported as static HTML
-- TypeScript and plain CSS with design tokens
-- [Jost](https://fonts.google.com/specimen/Jost) and IBM Plex Mono, self-hosted via Fontsource
-- Hosted on [Cloudflare Workers](https://developers.cloudflare.com/workers/static-assets/) static assets
-- [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/): cookieless, no personal data collected
-
-## Project structure
-
-```
-app/
-  layout.tsx       Metadata, structured data, theme and analytics scripts
-  page.tsx         Page content and sections
-  globals.css      Design tokens, layout and animation
-  sitemap.ts       Sitemap
-  robots.ts        Robots rules
-  icon.svg         Favicon
-components/
-  Orrery.tsx       The hero orrery
-  ThemeToggle.tsx  Light/dark switch
-  BuildIcons.tsx   Project card icons
-public/
-  og.png           Social preview image
-wrangler.jsonc     Cloudflare deployment config
-```
-
-## Running locally
+## Running it locally
 
 ```bash
 npm install
@@ -48,15 +20,3 @@ npm run dev
 ```
 
 Then open [localhost:3000](http://localhost:3000).
-
-## Building and deploying
-
-```bash
-npm run build
-```
-
-This outputs a static site to `out/`. Every push to `main` is built and deployed automatically by Cloudflare (`npm run build`, then `npx wrangler deploy`).
-
-## Contact
-
-[hello@tomjallen.me](mailto:hello@tomjallen.me) · [LinkedIn](https://linkedin.com/in/tom-j-allen)
