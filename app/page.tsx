@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import Orrery from "@/components/Orrery";
-import ThemeToggle from "@/components/ThemeToggle";
+import OrreryStory from "@/components/story/OrreryStory";
 import { ChatRecapIcon, GamesIcon, HomeLabIcon, SurfFlagIcon } from "@/components/BuildIcons";
 
 const EMAIL = "hello@tomjallen.me";
@@ -111,36 +110,9 @@ function BuildCard({ b }: { b: Build }) {
 export default function HomePage() {
   return (
     <>
-      <header className="site-header">
-        <a href="#top" className="wordmark" aria-label="Tom J Allen, back to top">
-          TJA<span className="wordmark-dot" aria-hidden="true" />
-        </a>
-        <div className="header-right">
-          <nav aria-label="Sections">
-            <a href="#work">Work</a>
-            <a href="#building">Building</a>
-            <a href="#contact">Contact</a>
-          </nav>
-          <ThemeToggle />
-        </div>
-      </header>
+      <OrreryStory />
 
-      <main id="top">
-        <section className="hero">
-          <div className="hero-text">
-            <h1>Tom J Allen</h1>
-            <p className="tagline">Order from chaos, done beautifully.</p>
-            <p className="intro">
-              I&rsquo;m Tom, a Sydney-based AI platform and product leader working across
-              ontology, knowledge graphs and semantic data models. I turn domain complexity into
-              coherent, buildable models, then help teams build on them.
-            </p>
-          </div>
-          <div className="hero-figure">
-            <Orrery />
-          </div>
-        </section>
-
+      <main>
         <section id="drives" className="band" aria-labelledby="drives-h">
           <h2 id="drives-h">What drives me</h2>
           <dl className="band-body pairs">

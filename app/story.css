@@ -1,0 +1,513 @@
+/* ---------- Scroll story ----------
+   A pinned stage. It opens on a centred hero over drifting planets. Scrolling builds the orrery
+   in five steps that pass either side of it, then settles into the introduction on the left and
+   the finished orrery on the right (stacked below ~980px). Behaviour lives in components/story. */
+
+:root {
+  --moon: #d8d5cf;
+  --sun1: #f7d27a;
+  --sun2: #e8932f;
+  --sun-ink: #1b1b1b;
+  --strip: rgb(242 236 225 / 0.88);
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.3rem;
+  --step-2: clamp(1.45rem, 2.4vw, 1.9rem);
+  --step-3: clamp(2.4rem, 5.4vw, 3.6rem);
+  --step-4: clamp(2.3rem, 5vw, 4.2rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --moon: #8e8a84;
+    --strip: rgb(27 27 27 / 0.86);
+  }
+}
+
+:root[data-theme="dark"] {
+  --moon: #8e8a84;
+  --strip: rgb(27 27 27 / 0.86);
+}
+
+/* The theme change spreads out from the moon as a growing circle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--strip);
+}
+
+/* Pinned strip */
+.strip {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 0;
+  right: 0;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem max(16px, env(safe-area-inset-right, 0px)) 0.7rem max(16px, env(safe-area-inset-left, 0px));
+  background: var(--strip);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-grid;
+}
+
+.wordmark > span {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  transition:
+    opacity 0.35s,
+    transform 0.35s;
+}
+
+.wm-a {
+  letter-spacing: 0.08em;
+}
+.wm-b {
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(6px);
+  white-space: nowrap;
+}
+.wordmark.named .wm-a {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+.wordmark.named .wm-b {
+  opacity: 1;
+  transform: none;
+}
+.wordmark i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  display: inline-block;
+}
+
+.strip-right {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  font-size: var(--step--1);
+}
+.skip {
+  color: var(--muted);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.ask {
+  background: var(--text);
+  color: var(--ground);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.ask:hover {
+  text-decoration: none;
+}
+
+/* Story track and sticky stage */
+.story {
+  position: relative;
+  height: 540vh;
+}
+#settled {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+.sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Text layers hold no links, so they never block the orrery underneath when faded out */
+.story-hero,
+.step,
+.story-intro {
+  pointer-events: none;
+}
+
+/* Hero: centred on arrival, lifts away as the story starts */
+.story-hero {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  text-align: center;
+  width: min(44rem, calc(100% - 32px));
+}
+.story-hero h1 {
+  font-size: var(--step-4);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+.story-hero .h-tag {
+  color: var(--muted);
+}
+.story-hero .sub {
+  margin: 1.1rem auto 0;
+  max-width: 30rem;
+  font-size: var(--step-1);
+  line-height: 1.4;
+  text-wrap: balance;
+}
+.story-hero .cue {
+  margin: 1.8rem 0 0;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  color: var(--muted);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.story-hero .cue span {
+  display: inline-block;
+  margin-left: 0.4em;
+}
+
+/* Steps: pass through either side of the orrery */
+.step {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  opacity: 0;
+}
+.step .num {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.step .line {
+  font-size: var(--step-2);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.008em;
+  text-wrap: balance;
+}
+.step small {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* The settled introduction */
+.story-intro {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: min(29rem, calc(100% - 32px));
+  opacity: 0;
+}
+.story-intro p {
+  margin: 0 0 0.75rem;
+  text-wrap: pretty;
+}
+.story-intro .fname {
+  margin-bottom: 0.9rem;
+  font-size: var(--step-3);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+.story-intro .ftag {
+  margin-bottom: 1.1rem;
+  font-size: var(--step-2);
+  font-weight: 500;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.story-intro .lede {
+  font-size: var(--step-1);
+  line-height: 1.38;
+}
+.story-intro .where {
+  margin: 0;
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.story-intro .go {
+  margin: 1.4rem 0 0;
+  font-family: var(--mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+}
+.story-intro .go a {
+  pointer-events: auto;
+  color: var(--text);
+}
+
+/* Telescope lens and planet readouts */
+.lens-ring {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.2;
+}
+.lens-ring.thin {
+  stroke-width: 0.6;
+  opacity: 0.6;
+}
+.lens-tick {
+  stroke: var(--text);
+  stroke-width: 0.8;
+  opacity: 0.7;
+}
+.lens-cross {
+  stroke: var(--text);
+  stroke-width: 0.7;
+  opacity: 0.55;
+}
+.stage.lens-cursor,
+.stage.lens-cursor * {
+  cursor: none;
+}
+
+.readout {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  width: 236px;
+  padding: 12px 14px 10px;
+  background: var(--strip);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.readout.on {
+  opacity: 1;
+}
+.ro-name {
+  margin: 0 0 4px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.ro-name i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+.ro-line {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  letter-spacing: 0;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.ro-line:not(:last-child) {
+  margin-bottom: 9px;
+}
+.ro-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  margin: 5px 0;
+}
+.ro-bar {
+  display: flex;
+  gap: 2px;
+}
+.ro-bar b {
+  width: 13px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--rule);
+}
+.ro-bar b.on {
+  background: var(--c);
+}
+
+/* SVG pieces */
+.ring {
+  fill: none;
+  stroke: var(--text);
+  stroke-opacity: 0.24;
+  transition: stroke-opacity 0.2s;
+}
+.ring.dashed {
+  stroke-dasharray: 3 6;
+}
+.orbit.hot .ring {
+  stroke: var(--c);
+  stroke-opacity: 1;
+}
+.hit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 20;
+}
+.rlabel {
+  fill: var(--muted);
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  transition: fill 0.2s;
+}
+.orbit.hot .rlabel {
+  fill: var(--c);
+}
+.star,
+.speck {
+  fill: var(--text);
+}
+.tick {
+  stroke: var(--text);
+}
+.sun-mark {
+  fill: var(--sun-ink);
+  font: 600 27px var(--sans);
+  letter-spacing: 0.08em;
+}
+.planet-link,
+.orbit a {
+  cursor: pointer;
+  outline: none;
+}
+.orbit a:focus-visible .ring {
+  stroke: var(--c);
+  stroke-opacity: 1;
+}
+#moon {
+  cursor: pointer;
+  outline: none;
+}
+#moon:focus-visible .moon-hit {
+  stroke: var(--text);
+  stroke-width: 3;
+}
+
+/* Next step button (narrow screens) */
+.next {
+  display: none;
+}
+
+@media (max-width: 979px) {
+  .next {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: fixed;
+    z-index: 9;
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    font: 500 0.9rem var(--sans);
+    color: var(--ground);
+    background: var(--text);
+    border: 0;
+    border-radius: 999px;
+    padding: 0.6rem 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    cursor: pointer;
+  }
+  .next.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .story-hero .sub {
+    font-size: 1.1rem;
+  }
+  .step {
+    text-align: center;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--ground) 80%, transparent);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .step .line {
+    font-size: 1.3rem;
+  }
+  .step small {
+    font-size: 0.95rem;
+  }
+  .story-intro .fname {
+    margin-bottom: 0.5rem;
+  }
+  .story-intro .ftag {
+    font-size: 1.25rem;
+    margin-bottom: 0.7rem;
+  }
+  .story-intro p {
+    font-size: 0.95rem;
+  }
+  .story-intro .lede {
+    font-size: 1.05rem;
+  }
+  .skip {
+    font-size: 0.8rem;
+  }
+  .strip-right {
+    gap: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story {
+    height: 100svh;
+  }
+}
