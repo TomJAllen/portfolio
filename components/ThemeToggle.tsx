@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 type Theme = "light" | "dark";
 
@@ -10,12 +10,19 @@ function currentTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme | null>(null);
+// The theme can change from this button, the orrery's moon, or the system setting
+function subscribe(onChange: () => void) {
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  window.addEventListener("themechange", onChange);
+  media.addEventListener("change", onChange);
+  return () => {
+    window.removeEventListener("themechange", onChange);
+    media.removeEventListener("change", onChange);
+  };
+}
 
-  useEffect(() => {
-    setTheme(currentTheme());
-  }, []);
+export default function ThemeToggle() {
+  const theme = useSyncExternalStore(subscribe, currentTheme, () => null);
 
   function toggle() {
     const next: Theme = currentTheme() === "dark" ? "light" : "dark";
@@ -23,7 +30,7 @@ export default function ThemeToggle() {
     try {
       localStorage.setItem("theme", next);
     } catch {}
-    setTheme(next);
+    window.dispatchEvent(new Event("themechange"));
   }
 
   const label = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";

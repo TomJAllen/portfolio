@@ -1,7 +1,12 @@
-import "@fontsource-variable/jost";
+import "@fontsource/ibm-plex-sans/400.css";
+import "@fontsource/ibm-plex-sans/500.css";
+import "@fontsource/ibm-plex-sans/600.css";
 import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
+import "./story.css";
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 
 const SITE_URL = "https://tomjallen.me";
 const DESCRIPTION =
@@ -86,9 +91,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         {children}
         {/* Cloudflare Web Analytics: cookieless, privacy-friendly visit counts */}
-        <script
-          type="module"
+        <Script
           src="https://static.cloudflareinsights.com/beacon.min.js"
+          strategy="afterInteractive"
           data-cf-beacon='{"token": "72a176526f194bbb8097bf932aa261bb"}'
         />
       </body>

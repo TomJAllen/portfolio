@@ -15,7 +15,7 @@
   --line: rgb(27 27 27 / 0.42);
   --link: var(--ultramarine);
 
-  --sans: "Jost Variable", "Jost", "Futura", "Avenir Next", system-ui, sans-serif;
+  --sans: "IBM Plex Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 
   --gutter: clamp(1rem, 4vw, 3rem);
@@ -66,7 +66,7 @@ body {
 }
 
 [id] {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 4.5rem;
 }
 
 body {
@@ -110,57 +110,6 @@ a:hover {
   outline: 2px solid var(--red);
   outline-offset: 3px;
   border-radius: 2px;
-}
-
-/* ---------- Header ---------- */
-
-.site-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 76rem;
-  margin: 0 auto;
-  padding: 1.5rem var(--gutter);
-}
-
-.wordmark {
-  position: relative;
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.35rem;
-  letter-spacing: 0.04em;
-}
-
-.wordmark-dot {
-  position: absolute;
-  top: 0.05em;
-  right: -0.55em;
-  width: 0.36em;
-  height: 0.36em;
-  border-radius: 50%;
-  background: var(--red);
-}
-
-.site-header nav {
-  display: flex;
-  gap: clamp(1rem, 3vw, 2rem);
-}
-
-.site-header nav a {
-  color: var(--text);
-  text-decoration: none;
-  font-size: 1rem;
-}
-
-.site-header nav a:hover {
-  text-decoration: underline;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: clamp(1rem, 3vw, 2rem);
 }
 
 .theme-toggle {
@@ -218,263 +167,12 @@ a:hover {
   opacity: 1;
 }
 
-/* ---------- Hero ---------- */
+/* ---------- Main ---------- */
 
 main {
   max-width: 76rem;
   margin: 0 auto;
   padding: 0 var(--gutter);
-}
-
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(2rem, 5vw, 5rem);
-  padding: clamp(2rem, 6vw, 5rem) 0 clamp(3rem, 8vw, 6rem);
-}
-
-.hero h1 {
-  font-size: clamp(3.25rem, 7.5vw, 6rem);
-  font-weight: 500;
-  line-height: 0.95;
-  letter-spacing: -0.025em;
-}
-
-.tagline {
-  margin-top: 1.25rem;
-  font-size: clamp(1.5rem, 2.8vw, 2.25rem);
-  font-weight: 350;
-  line-height: 1.2;
-  max-width: 16em;
-}
-
-.intro {
-  margin-top: 2rem;
-  max-width: var(--measure);
-  color: var(--muted);
-}
-
-.hero-figure {
-  justify-self: center;
-  width: 100%;
-  max-width: 34rem;
-}
-
-/* ---------- Orrery ---------- */
-
-.orrery {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-.orrery .construction line {
-  stroke: var(--rule);
-  stroke-width: 1;
-  stroke-dasharray: 2 6;
-}
-
-.orrery .tick {
-  stroke: var(--line);
-  stroke-width: 1;
-}
-
-.orrery .tick.long {
-  stroke: var(--text);
-  stroke-width: 1.5;
-}
-
-.orrery .ring {
-  fill: none;
-  stroke: var(--line);
-  stroke-width: 1;
-  transition: stroke 0.3s ease, stroke-width 0.3s ease;
-}
-
-.orrery .ring.dashed {
-  stroke-dasharray: 3 5;
-}
-
-/* Wide invisible stroke so each orbit is easy to hover */
-.orrery .hit {
-  fill: none;
-  stroke: transparent;
-  stroke-width: 20;
-  pointer-events: stroke;
-}
-
-.orrery .ring-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  fill: var(--muted);
-  transition: fill 0.3s ease;
-  pointer-events: none;
-}
-
-.orrery .orbit-link {
-  cursor: pointer;
-  outline: none;
-}
-
-.orrery .orbit:hover .ring,
-.orrery .orbit-link:focus-visible .ring {
-  stroke: var(--c);
-  stroke-width: 2;
-}
-
-.orrery .orbit:hover .ring-label,
-.orrery .orbit-link:focus-visible .ring-label {
-  fill: var(--c);
-}
-
-.orrery .orbit-link:focus-visible .body {
-  transform: scale(1.5);
-}
-
-.orrery .body {
-  transform-box: fill-box;
-  transform-origin: center;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.orrery .orbit:hover .body {
-  transform: scale(1.5);
-}
-
-.orrery .core {
-  fill: var(--text);
-  transition: fill 0.4s ease;
-}
-
-.orrery .core-mark {
-  font-family: var(--sans);
-  font-weight: 600;
-  font-size: 30px;
-  letter-spacing: 0.04em;
-  fill: var(--ground);
-  transition: fill 0.4s ease;
-}
-
-/* Everything that rotates turns about the centre of the drawing */
-.orrery .revolve,
-.orrery .tittle,
-.orrery .dial-spin,
-.orrery .orbit,
-.orrery .core-group,
-.orrery .arrive {
-  transform-box: view-box;
-  transform-origin: 50% 50%;
-}
-
-/*
-  Load sequence (one orchestrated moment):
-  1. the dial swings into place, 2. orbits expand outward from the core one by one,
-  3. planets sweep in along their orbits, 4. then everything keeps turning at its own pace.
-*/
-@media (prefers-reduced-motion: no-preference) {
-  .orrery .construction {
-    animation: fade-in 1.2s ease-out both;
-  }
-
-  .orrery .dial {
-    animation: fade-in 1s ease-out both;
-  }
-
-  .orrery .dial-spin {
-    animation:
-      dial-settle 1.6s cubic-bezier(0.16, 1, 0.3, 1) both,
-      orbit 900s linear 1.6s infinite reverse;
-  }
-
-  .orrery .core-group {
-    animation: core-in 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
-  }
-
-  .orrery .orbit {
-    animation: ring-in 1s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(0.35s + var(--i) * 0.12s);
-  }
-
-  .orrery .arrive {
-    animation: sweep-in 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(0.6s + var(--i) * 0.12s);
-  }
-
-  .orrery .revolve,
-  .orrery .tittle {
-    animation: orbit var(--period) linear infinite;
-    animation-delay: 2.4s;
-  }
-
-  .orrery .tittle {
-    animation:
-      fade-in 0.6s ease-out 1.2s both,
-      orbit var(--period) linear 1.2s infinite;
-  }
-}
-
-@keyframes orbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes dial-settle {
-  from {
-    transform: rotate(-40deg);
-  }
-}
-
-@keyframes core-in {
-  from {
-    opacity: 0;
-    transform: scale(0.4);
-  }
-}
-
-@keyframes ring-in {
-  from {
-    opacity: 0;
-    transform: scale(0.55);
-  }
-}
-
-@keyframes sweep-in {
-  from {
-    opacity: 0;
-    transform: rotate(-120deg);
-  }
-}
-
-/* Hero text: a single, quiet rise that lands with the orrery */
-@media (prefers-reduced-motion: no-preference) {
-  .hero-text > * {
-    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .hero-text > :nth-child(2) {
-    animation-delay: 0.12s;
-  }
-
-  .hero-text > :nth-child(3) {
-    animation-delay: 0.24s;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(0.6rem);
-  }
 }
 
 /* ---------- Bands (Swiss grid) ---------- */
@@ -701,14 +399,6 @@ main {
 /* ---------- Small screens ---------- */
 
 @media (max-width: 52rem) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-figure {
-    max-width: 26rem;
-  }
-
   .band {
     grid-template-columns: 1fr;
   }
@@ -727,10 +417,6 @@ main {
 @media (max-width: 30rem) {
   body {
     font-size: 1.0625rem;
-  }
-
-  .site-header nav {
-    gap: 1rem;
   }
 
   .site-footer {
