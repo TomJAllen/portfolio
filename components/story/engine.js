@@ -516,7 +516,7 @@ export function startStory() {
   let G = null,
     lensOrder = [],
     lensTicks = null,
-    lensT = 0;
+    lensHint = null;
   const moonPath = { rev: 0 };
   function layout() {
     const W = stage.clientWidth,
@@ -667,6 +667,8 @@ export function startStory() {
         { x1: dx * LR * 0.3, y1: dy * LR * 0.3, x2: dx * (LR + 10), y2: dy * (LR + 10), class: "lens-cross" },
         lensG,
       );
+    lensHint = el("text", { y: LR + 26, class: "lens-hint", "text-anchor": "middle" }, lensG);
+    lensHint.textContent = "Tap or drag to look";
     G.LR = LR;
     for (const b of [...stars, ...planets]) {
       b.sx = b.X0;
@@ -702,6 +704,39 @@ export function startStory() {
   on(stage, "pointerleave", () => {
     mouse = null;
   });
+
+  // Touch: the telescope goes where you tap, and follows a sideways drag (vertical swipes still scroll)
+  let aim = null,
+    aimPl = null,
+    finger = false,
+    lensPos = null,
+    lensLive = false,
+    looked = false;
+  const aimAt = (e) => {
+    const r = stage.getBoundingClientRect(),
+      x = e.clientX - r.left,
+      y = e.clientY - r.top;
+    let bd = G.LR * 1.3;
+    aimPl = null;
+    for (const pl of planets) {
+      const d = Math.hypot(pl.sx - x, pl.sy - y);
+      if (d < bd) {
+        bd = d;
+        aimPl = pl;
+      }
+    }
+    aim = { x, y };
+    looked = true;
+  };
+  on(stage, "pointerdown", (e) => {
+    if (e.pointerType === "mouse" || !lensLive) return;
+    finger = true;
+    aimAt(e);
+  });
+  on(stage, "pointermove", (e) => {
+    if (e.pointerType !== "mouse" && finger && lensLive) aimAt(e);
+  });
+  for (const ev of ["pointerup", "pointercancel"]) on(stage, ev, () => (finger = false));
 
   let sp = target(),
     lastT = performance.now(),
@@ -806,7 +841,7 @@ export function startStory() {
     }
 
     // The telescope, in step 1 only. With a mouse it is the cursor, magnifying whatever planet it
-    // passes over; without one it works round the planets by itself.
+    // passes over; on touch it rests on a planet and moves where you tap or drag.
     const s1w = T.steps[0];
     const lensV = win(p, s1w[0] + 0.01, s1w[0] + 0.05) * (1 - win(p, s1w[1] - 0.05, s1w[1] - 0.01));
     const cursorMode = finePointer && !!mouse && lensV > 0;
@@ -814,10 +849,10 @@ export function startStory() {
       lensZoom = 0,
       lx = 0,
       ly = 0;
+    lensLive = !cursorMode && lensV > 0.3;
     if (cursorMode) {
       lx = mouse.x;
       ly = mouse.y;
-      lensT = 0;
       let bd = G.LR * 0.95;
       for (const pl of planets) {
         const d = Math.hypot(pl.sx - lx, pl.sy - ly);
@@ -828,19 +863,36 @@ export function startStory() {
       }
       lensZoom = 1;
     } else if (lensV > 0) {
-      lensT += dt;
-      const n = lensOrder.length,
-        cyc = 2.8,
-        i = Math.floor(lensT / cyc) % n,
-        f = lensT % cyc;
-      const b = lensOrder[i],
-        a = lensT < cyc ? b : lensOrder[(i + n - 1) % n];
-      const m = smooth(clamp(f / 1.1));
-      lx = lerp(a.sx, b.sx, m);
-      ly = lerp(a.sy, b.sy, m);
-      lensZoom = smooth(clamp((f - 0.9) / 0.5)) * (1 - smooth(clamp((f - 2.4) / 0.4)));
-      lensFocus = b;
-    } else lensT = 0;
+      // Rest on the planet nearest the middle until someone aims it
+      if (!aim) {
+        let bd = Infinity;
+        for (const pl of lensOrder) {
+          const d = Math.hypot(pl.sx - G.W / 2, pl.sy - G.H * 0.42);
+          if (d < bd) {
+            bd = d;
+            aimPl = pl;
+          }
+        }
+      }
+      // While the finger is down the lens follows it; once lifted it locks onto the planet it found
+      const lock = aimPl && (!finger || !aim);
+      const tx = lock ? aimPl.sx : aim.x,
+        ty = lock ? aimPl.sy : aim.y;
+      if (!lensPos) lensPos = { x: tx, y: ty };
+      const k = 1 - Math.exp(-dt * (finger ? 14 : 6));
+      lensPos.x += (tx - lensPos.x) * k;
+      lensPos.y += (ty - lensPos.y) * k;
+      lx = lensPos.x;
+      ly = lensPos.y;
+      if (aimPl) {
+        lensFocus = aimPl;
+        lensZoom = 1 - smooth(clamp(Math.hypot(aimPl.sx - lx, aimPl.sy - ly) / (G.LR * 0.8)));
+      }
+      lensHint.style.opacity = looked ? 0 : 0.75;
+    } else {
+      aim = aimPl = lensPos = null;
+      finger = false;
+    }
     lensG.style.opacity = lensV.toFixed(3);
     if (lensV > 0) {
       lensG.setAttribute(
